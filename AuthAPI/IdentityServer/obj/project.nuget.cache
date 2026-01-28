@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vUG/mnkrW34=",
+  "dgSpecHash": "6DIr1mqR7nE=",
   "success": true,
-  "projectFilePath": "/home/iryna/IrynaDocs/Files/NetApps/AuthAPI/src/IdentityServer/IdentityServer.csproj",
+  "projectFilePath": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/AuthAPI/IdentityServer/IdentityServer.csproj",
   "expectedPackageFiles": [
     "/home/iryna/.nuget/packages/azure.core/1.47.1/azure.core.1.47.1.nupkg.sha512",
     "/home/iryna/.nuget/packages/azure.identity/1.14.2/azure.identity.1.14.2.nupkg.sha512",
@@ -64,9 +64,9 @@
       "code": "NU1510",
       "level": "Warning",
       "message": "PackageReference Microsoft.AspNetCore.Identity will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
-      "projectPath": "/home/iryna/IrynaDocs/Files/NetApps/AuthAPI/src/IdentityServer/IdentityServer.csproj",
+      "projectPath": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/AuthAPI/IdentityServer/IdentityServer.csproj",
       "warningLevel": 1,
-      "filePath": "/home/iryna/IrynaDocs/Files/NetApps/AuthAPI/src/IdentityServer/IdentityServer.csproj",
+      "filePath": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/AuthAPI/IdentityServer/IdentityServer.csproj",
       "libraryId": "Microsoft.AspNetCore.Identity",
       "targetGraphs": [
         "net10.0"

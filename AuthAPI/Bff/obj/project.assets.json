@@ -1046,11 +1046,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/iryna/IrynaDocs/Files/NetApps/React/MyBff/MyBff.csproj",
+      "projectUniqueName": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/AuthAPI/Bff/MyBff.csproj",
       "projectName": "MyBff",
-      "projectPath": "/home/iryna/IrynaDocs/Files/NetApps/React/MyBff/MyBff.csproj",
+      "projectPath": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/AuthAPI/Bff/MyBff.csproj",
       "packagesPath": "/home/iryna/.nuget/packages/",
-      "outputPath": "/home/iryna/IrynaDocs/Files/NetApps/React/MyBff/obj/",
+      "outputPath": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/AuthAPI/Bff/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/iryna/.nuget/NuGet/NuGet.Config"

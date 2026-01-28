@@ -50,12 +50,14 @@ public static class SD
                 AllowedGrantTypes = GrantTypes.Code,
 
                 // where to redirect to after login
-                RedirectUris = { "https://localhost:5229/signin-oidc",  "https://localhost:5173/signin-oidc",
+                RedirectUris = { "https://localhost:5229/signin-oidc", "https://localhost:5173/signin-oidc",
                 "https://localhost:5174/signin-oidc"
                 }, //"https://localhost:5173/signin-oidc"
 
                 // where to redirect to after logout
-                PostLogoutRedirectUris = { "https://localhost:5229/signout-callback-oidc" },
+                PostLogoutRedirectUris = { "https://localhost:5229/signout-callback-oidc",
+                "https://localhost:5173/signout-callback-oidc",
+                "https://localhost:5174/signout-callback-oidc"  },
                 AllowOfflineAccess = true,
 
                 AllowedScopes = new List<string>

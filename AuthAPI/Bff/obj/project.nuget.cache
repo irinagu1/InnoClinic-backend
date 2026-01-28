@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "oKmktY3PIdA=",
+  "dgSpecHash": "ScRChi2MQYA=",
   "success": true,
-  "projectFilePath": "/home/iryna/IrynaDocs/Files/NetApps/React/MyBff/MyBff.csproj",
+  "projectFilePath": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/AuthAPI/Bff/MyBff.csproj",
   "expectedPackageFiles": [
     "/home/iryna/.nuget/packages/duende.accesstokenmanagement/4.1.0/duende.accesstokenmanagement.4.1.0.nupkg.sha512",
     "/home/iryna/.nuget/packages/duende.accesstokenmanagement.openidconnect/4.1.0/duende.accesstokenmanagement.openidconnect.4.1.0.nupkg.sha512",

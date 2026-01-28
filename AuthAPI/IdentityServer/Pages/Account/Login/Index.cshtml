@@ -27,21 +27,8 @@
                                 <label asp-for="Input.Password"></label>
                                 <input type="password" class="form-control" placeholder="Password" asp-for="Input.Password" autocomplete="off">
                             </div>
-                            
-                            @if (Model.View.AllowRememberLogin)
-                            {
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input class="form-check-input" asp-for="Input.RememberLogin">
-                                        <label class="form-check-label" asp-for="Input.RememberLogin">
-                                            Remember My Login
-                                        </label>
-                                    </div>
-                                </div>
-                            }
-                            
                             <a asp-page="../Create/Index" asp-route-returnUrl="@Model.Input.ReturnUrl">
-                            New user? Register
+                            New user? Sign up
                             </a><br>
 
                             <button class="btn btn-primary" name="Input.Button" value="login">Login</button>
