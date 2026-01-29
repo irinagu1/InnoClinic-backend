@@ -8,6 +8,8 @@ public static class SD
 {
     public const string Admin ="admin";
     public const string Customer ="Customer";
+    public const string Doctor = "doctor";
+    public const string Receptionist = "receptionist";
 
         //по сути это группа клеймов для доступа к скоуп
     public static IEnumerable<IdentityResource> IdentityResources =>
