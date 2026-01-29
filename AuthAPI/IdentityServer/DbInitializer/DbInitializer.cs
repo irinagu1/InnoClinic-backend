@@ -36,7 +36,6 @@ public class DbInitializer : IDbInitializer
         else
             return;
         
-        //doctor
         ApplicationUser doctorUser = new()
         {
             UserName="doc@mail.ru",
@@ -55,7 +54,6 @@ public class DbInitializer : IDbInitializer
             new System.Security.Claims.Claim(JwtClaimTypes.Role, SD.Doctor),
         }).Result;
 
-        //receptionist
         ApplicationUser receptionistUser = new()
         {
             UserName="rec@mail.ru",

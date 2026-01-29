@@ -82,6 +82,7 @@ public class Index : PageModel
                 }*/
 
                 await _userManager.AddToRoleAsync(user, Input.RoleName);
+                
 
                 await _userManager.AddClaimsAsync(user, new Claim[]
                 {
