@@ -37,26 +37,26 @@ public class Index : PageModel
 
     public async Task<IActionResult> OnGet(string returnUrl)
     {
-        List<string> roles = new List<string>()
+        /*List<string> roles = new List<string>()
         {
             SD.Admin,
             SD.Customer
         };
         
-        ViewData["roles_message"] = roles;
+        ViewData["roles_message"] = roles;*/
 
-        Input = new InputModel { ReturnUrl = returnUrl };
+        Input = new InputModel { ReturnUrl = returnUrl, RoleName = SD.Customer };
 
         return Page();
     }
 
     public async Task<IActionResult> OnPost(string returnUrl)
     {
-        ViewData["roles_message"]= new List<string>()
+        /*ViewData["roles_message"]= new List<string>()
         {
             SD.Admin,
             SD.Customer
-        };
+        };*/
 
         if (ModelState.IsValid)
         {
@@ -71,7 +71,7 @@ public class Index : PageModel
             var result = await _userManager.CreateAsync(user, Input.Password);
             if(result.Succeeded)
             {
-                if(!_roleManager.RoleExistsAsync(Input.RoleName).GetAwaiter().GetResult())
+                /*if(!_roleManager.RoleExistsAsync(Input.RoleName).GetAwaiter().GetResult())
                 {
                     var userRole = new IdentityRole
                     {
@@ -79,8 +79,10 @@ public class Index : PageModel
                         NormalizedName= Input.RoleName,
                     };
                     await _roleManager.CreateAsync(userRole); 
-                }
+                }*/
+
                 await _userManager.AddToRoleAsync(user, Input.RoleName);
+                
 
                 await _userManager.AddClaimsAsync(user, new Claim[]
                 {

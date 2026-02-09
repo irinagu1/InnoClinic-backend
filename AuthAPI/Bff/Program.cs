@@ -4,55 +4,45 @@ using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddBff()
-  .AddFrontends(
+var bffBuilder = builder.Services.AddBff();
+
+bffBuilder.AddFrontends(
     new BffFrontend(BffFrontendName.Parse("clientfront"))
-          .WithCdnIndexHtmlUrl(new Uri("https://localhost:5173")),
+        .MapToPath("/client") 
+        .WithCdnIndexHtmlUrl(new Uri("https://localhost:5173")),
+
     new BffFrontend(BffFrontendName.Parse("adminfront"))
-          .WithCdnIndexHtmlUrl(new Uri("https://localhost:5174"))
-  );
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = "cookie_clientfront";
-    options.DefaultChallengeScheme = "oidc_clientfront";
-    options.DefaultSignOutScheme = "oidc_clientfront";
-})
-.AddCookie("cookie_clientfront", options =>
-{
-    options.Cookie.Name = "__Host-bff";
-    options.Cookie.SameSite = SameSiteMode.Strict;
-})
-.AddOpenIdConnect("oidc_clientfront", options =>
-{
+        .MapToPath("/admin")
+        .WithCdnIndexHtmlUrl(new Uri("https://localhost:5174"))
+);
+
+bffBuilder
+    .ConfigureOpenIdConnect(options => {
         options.Authority = "https://localhost:5001"; 
-     options.ClientId = "bff";
+        options.ClientId = "bff";
         options.ClientSecret = "secret";
         options.ResponseType = "code";
- //   options.ResponseMode = "query";
 
-   options.Scope.Add("api1");
+        options.Scope.Add("api1");
         options.Scope.Add("customRole");
         options.Scope.Add("offline_access");
 
+        options.GetClaimsFromUserInfoEndpoint = true;
+        options.MapInboundClaims = false;
+        options.SaveTokens = true;
+        options.DisableTelemetry = true;
 
-    options.GetClaimsFromUserInfoEndpoint = true;
-    options.MapInboundClaims = false;
-    options.SaveTokens = true;
-    options.DisableTelemetry = true;
-
-
-
-     options.TokenValidationParameters.RoleClaimType = "role";
+        options.TokenValidationParameters.RoleClaimType = "role";
         options.TokenValidationParameters.NameClaimType = "name";
         options.ClaimActions.Add(new JsonKeyClaimAction("role", null, "role"));
-       
-});
+    })
+    .ConfigureCookies(options => {
+        options.Cookie.SameSite = SameSiteMode.None;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
+
 
 builder.Services.AddAuthorization();
-
-
-
-
 
 /*
 builder.Services.AddBff();
@@ -94,19 +84,17 @@ builder.Services.AddAuthentication(options =>
 
 
 
-builder.Services.AddAuthorization();
-*/
+builder.Services.AddAuthorization();*/
+
 
 var app = builder.Build();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-// Configure the HTTP request pipeline.
-
 app.UseHttpsRedirection();
 app.UseAuthentication();
-// app.UseRouting();
+
 app.UseBff();
 app.UseAuthorization();
 app.MapBffManagementEndpoints();

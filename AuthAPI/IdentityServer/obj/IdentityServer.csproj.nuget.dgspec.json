@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/iryna/IrynaDocs/Files/NetApps/AuthAPI/src/IdentityServer/IdentityServer.csproj": {}
+    "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/AuthAPI/IdentityServer/IdentityServer.csproj": {}
   },
   "projects": {
-    "/home/iryna/IrynaDocs/Files/NetApps/AuthAPI/src/IdentityServer/IdentityServer.csproj": {
+    "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/AuthAPI/IdentityServer/IdentityServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/iryna/IrynaDocs/Files/NetApps/AuthAPI/src/IdentityServer/IdentityServer.csproj",
+        "projectUniqueName": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/AuthAPI/IdentityServer/IdentityServer.csproj",
         "projectName": "IdentityServer",
-        "projectPath": "/home/iryna/IrynaDocs/Files/NetApps/AuthAPI/src/IdentityServer/IdentityServer.csproj",
+        "projectPath": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/AuthAPI/IdentityServer/IdentityServer.csproj",
         "packagesPath": "/home/iryna/.nuget/packages/",
-        "outputPath": "/home/iryna/IrynaDocs/Files/NetApps/AuthAPI/src/IdentityServer/obj/",
+        "outputPath": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/AuthAPI/IdentityServer/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/iryna/.nuget/NuGet/NuGet.Config"
