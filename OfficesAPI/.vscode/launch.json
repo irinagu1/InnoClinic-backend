@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Offices Api presentation", 
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/Presentation/OfficesApi.Presentation/OfficesApi.Presentation.csproj" 
+        },
+    ],
+    "compounds": [
+        {
+        "name": "Start all",
+        "configurations": [
+            "Offices Api presentation",
+        ],
+        "stopAll": true
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/bin/Debug/net10.0/OfficesApi.Application.deps.json
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/bin/Debug/net10.0/OfficesApi.Application.dll
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/bin/Debug/net10.0/OfficesApi.Application.pdb
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/bin/Debug/net10.0/OfficesApi.Domain.dll
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/bin/Debug/net10.0/OfficesApi.Domain.pdb
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/obj/Debug/net10.0/OfficesApi.Application.csproj.AssemblyReference.cache
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/obj/Debug/net10.0/OfficesApi.Application.GeneratedMSBuildEditorConfig.editorconfig
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/obj/Debug/net10.0/OfficesApi.Application.AssemblyInfoInputs.cache
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/obj/Debug/net10.0/OfficesApi.Application.AssemblyInfo.cs
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/obj/Debug/net10.0/OfficesApi.Application.csproj.CoreCompileInputs.cache
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/obj/Debug/net10.0/OfficesApi.Application.sourcelink.json
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/obj/Debug/net10.0/OfficesA.A002BFE7.Up2Date
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/obj/Debug/net10.0/OfficesApi.Application.dll
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/obj/Debug/net10.0/refint/OfficesApi.Application.dll
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/obj/Debug/net10.0/OfficesApi.Application.pdb
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/obj/Debug/net10.0/ref/OfficesApi.Application.dll
