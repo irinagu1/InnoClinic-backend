@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/OfficesApi.Application.csproj",
-      "projectName": "OfficesApi.Application",
-      "projectPath": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/OfficesApi.Application.csproj",
+      "projectUniqueName": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Shared/OfficesApi.Shared.csproj",
+      "projectName": "OfficesApi.Shared",
+      "projectPath": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Shared/OfficesApi.Shared.csproj",
       "packagesPath": "/home/iryna/.nuget/packages/",
-      "outputPath": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Application/obj/",
+      "outputPath": "/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Shared/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/iryna/.nuget/NuGet/NuGet.Config"
