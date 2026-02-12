@@ -19,6 +19,10 @@ public class OfficesController : ControllerBase
         _sender = sender;
     }
 
+    /// <summary>
+    /// Gets list of all offices
+    /// </summary>
+    /// <returns>List of offices</returns>
     [HttpGet]
     public async Task<ActionResult> GetAllOffices()
     {
@@ -26,13 +30,23 @@ public class OfficesController : ControllerBase
         return Ok(offices);
     }
 
+    /// <summary>
+    /// Gets one existing office by id
+    /// </summary>
+    /// <param name="id">Office Id</param>
+    /// <returns>Office object</returns>
     [HttpGet("{id}")]
     public async Task<ActionResult> GetOfficeById(string id)
     {
         var office = await _sender.Send(new GetOfficeByIdQuery(id));
         return Ok(office);
     }
-
+    
+    /// <summary>
+    /// Creates new office
+    /// </summary>
+    /// <param name="officeCreate">Object with fields to create a new office</param>
+    /// <returns>New office object</returns>
     [HttpPost]
     public async Task<ActionResult> CreateOffice([FromBody] OfficeCreate officeCreate)
     {
@@ -46,7 +60,16 @@ public class OfficesController : ControllerBase
         await _sender.Send(new DeleteOfficeByIdCommand(id));
         return NoContent();
     }
-    
+
+    /// <summary>
+    /// Partially updates existing office
+    /// </summary>
+    /// <param name="id">Office Id</param>
+    /// <param name="updates">Dictionary of type: string-object, 
+    /// where string - name of existing field,
+    ///  obj - new value for it;
+    /// { "IsActive" : false }</param>
+    /// <returns>NoContent</returns>
     [HttpPut("{id}")]
     public async Task<IActionResult> PartiallyUpdateOffice(string id, 
         [FromBody] Dictionary<string,object> updates)

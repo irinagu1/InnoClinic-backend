@@ -1,3 +1,5 @@
+using System.Reflection;
+using Microsoft.OpenApi;
 using OfficesApi.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +12,15 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Offic
 
 builder.Services.ConfigureMongoDb(builder.Configuration);
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(opt =>
+{
+    opt.SwaggerDoc("v1", new OpenApiInfo{Title="Offices API", Version="v1"});
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
+    opt.IncludeXmlComments(xmlPath);
+
+});
 
 var app = builder.Build();
 

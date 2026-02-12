@@ -55,3 +55,5 @@
 /home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Presentation/bin/Debug/net10.0/OfficesApi.Domain.pdb
 /home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Presentation/bin/Debug/net10.0/AutoMapper.dll
 /home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Presentation/bin/Debug/net10.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Presentation/bin/Debug/net10.0/OfficesApi.Presentation.xml
+/home/iryna/IrynaDocs/Files/InnoClinic/Backend/OfficesAPI/OfficesApi.Presentation/obj/Debug/net10.0/OfficesApi.Presentation.xml
