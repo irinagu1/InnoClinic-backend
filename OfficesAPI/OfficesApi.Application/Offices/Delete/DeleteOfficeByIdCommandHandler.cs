@@ -1,10 +1,12 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 using OfficesApi.Application.Abstractions.Data;
 using OfficesApi.Shared;
 
 namespace OfficesApi.Application.Offices.Delete;
 
-public class DeleteOfficeByIdCommandHandler(IOfficeRepository repository)
+public class DeleteOfficeByIdCommandHandler
+    (IOfficeRepository repository, ILogger<DeleteOfficeByIdCommandHandler> logger)
     : IRequestHandler<DeleteOfficeByIdCommand>
 {
     public async Task Handle(DeleteOfficeByIdCommand request, CancellationToken cancellationToken)
@@ -14,10 +16,12 @@ public class DeleteOfficeByIdCommandHandler(IOfficeRepository repository)
         try
         {
             await repository.DeleteOfficeByIdAsync(request.id);
+            logger.LogInformation("Deleted office object: {@Request}", request );         
         }
         catch(Exception ex)
         {
-            throw new MongoDbException(ex.Message, ex);
+            logger.LogError("Exception occured when trying to delete office object: {@Request}", request);
+            throw new MongoDbException(ex.Message);
         }
     }
 

@@ -5,8 +5,11 @@ using Microsoft.OpenApi;
 using OfficesApi.Application;
 using OfficesApi.Application.Abstractions.Behaviour;
 using OfficesApi.Presentation;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.ConfigureLogging();
 
 builder.Services.ConfigureExceptionHandlers();
 
@@ -37,6 +40,10 @@ builder.Services.AddValidatorsFromAssembly(typeof(OfficesApi.Application.Assembl
 
 var app = builder.Build();
 
+app.UseMiddleware<CorrelationIdMiddleware>();
+app.UseSerilogRequestLogging();
+
+
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 
@@ -49,5 +56,13 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapControllers();
+
+app.Use(async (context, next) =>
+{
+    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+    logger.LogInformation("Started HTTP {Method} {Path} request" ,context.Request.Method, context.Request.Path);
+
+    await next.Invoke();
+});
 
 app.Run();

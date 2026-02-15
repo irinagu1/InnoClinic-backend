@@ -1,6 +1,7 @@
 using MongoDB.Driver;
 using OfficesApi.Application.Abstractions.Data;
 using OfficesApi.Infrastructure.MongoDb;
+using Serilog;
 
 namespace OfficesApi.Presentation;
 
@@ -39,5 +40,22 @@ public static class ExtensionMethods
         services.AddExceptionHandler<MongoDbExceptionHandler>();
 
         return services;    
+    }
+
+    public static IHostBuilder ConfigureLogging(this IHostBuilder host)
+    {
+        string customTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] [{CorrelationId}] {Message:lj}{NewLine}{Exception}";
+
+        host.UseSerilog((context, configuration) =>
+            configuration.ReadFrom.Configuration(context.Configuration)
+            .Enrich.FromLogContext()  
+            .WriteTo.Console(outputTemplate: customTemplate)
+            .WriteTo.File(
+                path: "logs/log-officesApi-.txt", 
+                rollingInterval: RollingInterval.Day,
+                outputTemplate: customTemplate,
+                shared: true) 
+            );
+        return host;
     }
 }
