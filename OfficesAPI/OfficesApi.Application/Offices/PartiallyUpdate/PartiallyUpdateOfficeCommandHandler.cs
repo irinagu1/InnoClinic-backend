@@ -1,5 +1,6 @@
 using MediatR;
 using OfficesApi.Application.Abstractions.Data;
+using OfficesApi.Shared;
 
 namespace OfficesApi.Application.Offices.PartiallyUpdate;
 
@@ -8,10 +9,13 @@ public class PartiallyUpdateOfficeCommandHandler(IOfficeRepository officeReposit
 {
     public async Task Handle(PartiallyUpdateOfficeCommand request, CancellationToken cancellationToken)
     {
-        //validate updates dictionary
-        request.updates.Remove("_id");
-        request.updates.Remove("Id");
-
-        await officeRepository.PartiallyUpdateOffice(request.id, request.updates);
+        try
+        {
+            await officeRepository.PartiallyUpdateOffice(request.id, request.updates);
+        }
+        catch(Exception ex)
+        {
+            throw new MongoDbException(ex.Message);
+        }
     }
 }

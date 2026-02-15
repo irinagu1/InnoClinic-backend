@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OfficesApi.Domain\OfficesApi.Domain.csproj" />
+    <ProjectReference Include="..\OfficesApi.Shared\OfficesApi.Shared.csproj" />
   </ItemGroup>
 
 </Project>

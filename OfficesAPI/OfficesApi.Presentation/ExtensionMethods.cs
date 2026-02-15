@@ -30,4 +30,14 @@ public static class ExtensionMethods
         
         return services;
     }
+
+    public static IServiceCollection ConfigureExceptionHandlers(this IServiceCollection services)
+    {
+        services.AddProblemDetails();
+        services.AddExceptionHandler<ValidationExceptionHandler>();
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddExceptionHandler<MongoDbExceptionHandler>();
+
+        return services;    
+    }
 }

@@ -2,6 +2,8 @@ using AutoMapper;
 using MediatR;
 using OfficesApi.Application.Abstractions.Data;
 using OfficesApi.Application.Offices.GetAll;
+using OfficesApi.Domain;
+using OfficesApi.Shared;
 
 namespace OfficesApi.Application.Offices.GetById;
 
@@ -10,13 +12,21 @@ public class GetOfficeByIdQueryHandler(IOfficeRepository officeRepository, IMapp
 {
     public async Task<OfficeResponse> Handle(GetOfficeByIdQuery request, CancellationToken cancellationToken)
     {
-        var officeEntity = await officeRepository.GetOfficeByIdAsync(request.id);
+        Office OfficeEntity;
+        try
+        {
+            OfficeEntity = await officeRepository.GetOfficeByIdAsync(request.id);
 
-        if(officeEntity is null)
-        { /*TODO: handle!!*/}
+            if(OfficeEntity is null)
+                throw new OfficeNotFoundException(request.id);
+        }
+        catch(Exception ex)
+        {
+            throw new MongoDbException(ex.Message);
+        }
+        
+        var OfficeResponse = mapper.Map<OfficeResponse>(OfficeEntity);
 
-        var officeResponse = mapper.Map<OfficeResponse>(officeEntity);
-
-        return officeResponse;
+        return OfficeResponse;
     }
 }
