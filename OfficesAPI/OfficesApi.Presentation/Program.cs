@@ -5,6 +5,7 @@ using Microsoft.OpenApi;
 using OfficesApi.Application;
 using OfficesApi.Application.Abstractions.Behaviour;
 using OfficesApi.Presentation;
+using OfficesApi.Presentation.Infrastructure.Poco;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,7 +24,7 @@ builder.Services.AddMediatR(cfg =>
 
         cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
     });
-
+        
 builder.Services.ConfigureMongoDb(builder.Configuration);
 
 builder.Services.AddSwaggerGen(opt =>

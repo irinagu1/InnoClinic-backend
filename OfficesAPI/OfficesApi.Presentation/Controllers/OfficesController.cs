@@ -24,7 +24,7 @@ public class OfficesController : ControllerBase
     /// <summary>
     /// Gets list of all offices
     /// </summary>
-    /// <returns>List of offices</returns>
+    /// <returns>List of offices</returns>ы
     [HttpGet]
     public async Task<ActionResult> GetAllOffices()
     {

@@ -1,32 +1,41 @@
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using OfficesApi.Application.Abstractions.Data;
 using OfficesApi.Infrastructure.MongoDb;
+using OfficesApi.Presentation.Infrastructure.Poco;
 using Serilog;
 
 namespace OfficesApi.Presentation;
 
 public static class ExtensionMethods
 {
-    public static IServiceCollection ConfigureMongoDb(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection ConfigureMongoDb(this IServiceCollection services, 
+    IConfiguration configuration)
     {
-        var mongoSettings = configuration.GetSection("MongoDbSettings");
-        var connectionString = mongoSettings["ConnectionString"];
-        var databaseName = mongoSettings["DatabaseName"];
-        var collectionName = mongoSettings["CollectionName"];
+        services.Configure<MongoDbSettings>
+            (configuration.GetSection(MongoDbSettings.SectionName));
+
 
         MongoDbMapper.RegisterMappings();
 
-        services.AddSingleton<IMongoClient>(new MongoClient(connectionString));
+        services.AddSingleton<IMongoClient>(sp =>
+        {
+            var opt = sp.GetRequiredService<IOptionsMonitor<MongoDbSettings>>();
+            return new MongoClient(opt.CurrentValue.ConnectionString);
+        });
+
         services.AddScoped(sp => 
         {
+            var opt = sp.GetRequiredService<IOptionsSnapshot<MongoDbSettings>>();
             var client = sp.GetRequiredService<IMongoClient>();
-            return client.GetDatabase(databaseName);
+            return client.GetDatabase(opt.Value.DatabaseName);
         });
 
         services.AddScoped<IOfficeRepository>(sp =>
         {
+            var opt = sp.GetRequiredService<IOptionsSnapshot<MongoDbSettings>>();
             var database = sp.GetRequiredService<IMongoDatabase>();
-            return new OfficeRepository(database, collectionName); 
+            return new OfficeRepository(database, opt.Value.CollectionName!); 
         });      
         
         return services;
