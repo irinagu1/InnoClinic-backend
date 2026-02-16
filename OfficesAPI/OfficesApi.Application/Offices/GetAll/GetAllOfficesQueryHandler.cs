@@ -1,6 +1,8 @@
 using AutoMapper;
 using MediatR;
 using OfficesApi.Application.Abstractions.Data;
+using OfficesApi.Domain;
+using OfficesApi.Shared;
 
 namespace OfficesApi.Application.Offices.GetAll;
 
@@ -10,9 +12,18 @@ public class GetAllOfficesQueryHandler(IOfficeRepository officeRepository, IMapp
     
     public async Task<IEnumerable<OfficeResponse>> 
         Handle(GetAllOfficesQuery request, CancellationToken cancellationToken)
-    {
-        var officesEntities = await officeRepository.GetAllOfficesAsync();
-
+    {   
+        IEnumerable<Office> officesEntities;
+        
+        try
+        {
+            officesEntities = await officeRepository.GetAllOfficesAsync();
+        }
+        catch(Exception ex)
+        {
+            throw new MongoDbException(ex.Message);
+        }
+        
         var officesResponse = mapper.Map<IEnumerable<OfficeResponse>>(officesEntities);
 
         return officesResponse;

@@ -13,10 +13,12 @@ namespace OfficesApi.Presentation.Controllers;
 public class OfficesController : ControllerBase
 {
     private readonly ISender _sender;
+    private readonly ILogger<OfficesController> _logger;
 
-    public OfficesController(ISender sender)
+    public OfficesController(ILogger<OfficesController> logger, ISender sender)
     {
         _sender = sender;
+        _logger = logger;
     }
 
     /// <summary>

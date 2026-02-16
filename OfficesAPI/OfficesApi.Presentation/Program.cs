@@ -1,14 +1,28 @@
 using System.Reflection;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi;
+using OfficesApi.Application;
+using OfficesApi.Application.Abstractions.Behaviour;
 using OfficesApi.Presentation;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.ConfigureLogging();
+
+builder.Services.ConfigureExceptionHandlers();
 
 builder.Services.AddControllers();
 
 builder.Services.AddAutoMapper(typeof(OfficesApi.Application.MappingProfile).Assembly);
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(OfficesApi.Application.AssemblyMarker).Assembly));
+builder.Services.AddMediatR(cfg => 
+    {
+        cfg.RegisterServicesFromAssembly(typeof(OfficesApi.Application.AssemblyMarker).Assembly);
+
+        cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+    });
 
 builder.Services.ConfigureMongoDb(builder.Configuration);
 
@@ -22,8 +36,16 @@ builder.Services.AddSwaggerGen(opt =>
 
 });
 
+builder.Services.AddValidatorsFromAssembly(typeof(OfficesApi.Application.AssemblyMarker).Assembly);
+
 var app = builder.Build();
 
+app.UseMiddleware<CorrelationIdMiddleware>();
+app.UseSerilogRequestLogging();
+
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
 
 if (app.Environment.IsDevelopment())
 {
@@ -32,9 +54,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.MapControllers();
 
+app.Use(async (context, next) =>
+{
+    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+    logger.LogInformation("Started HTTP {Method} {Path} request" ,context.Request.Method, context.Request.Path);
 
+    await next.Invoke();
+});
 
 app.Run();
-
