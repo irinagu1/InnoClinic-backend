@@ -11,7 +11,7 @@ public class OfficeRepository : IOfficeRepository
 
     public OfficeRepository(IMongoDatabase database, string collectionName)
     {
-        _officeCollection = database.GetCollection<Office>(collectionName);
+        _officeCollection = database.GetCollection<Office>(collectionName);        
     }
 
     public async Task AddOfficeAsync(Office office) =>
