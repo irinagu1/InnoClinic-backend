@@ -7,8 +7,21 @@ using OfficesApi.Application.Abstractions.Behaviour;
 using OfficesApi.Presentation;
 using OfficesApi.Presentation.Infrastructure.Poco;
 using Serilog;
+using SharpCompress.Compressors.ADC;
+
+var AdminClientAppCors = "AdminClientAppCors";
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy(name: AdminClientAppCors, policy =>
+    {
+        policy.WithOrigins("https://localhost:5174")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
 
 builder.Host.ConfigureLogging();
 
@@ -55,6 +68,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(AdminClientAppCors);
 
 app.MapControllers();
 
