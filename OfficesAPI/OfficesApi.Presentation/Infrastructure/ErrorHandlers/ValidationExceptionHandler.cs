@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OfficesApi.Presentation;
 internal sealed class ValidationExceptionHandler(
-    IProblemDetailsService problemDetailsService) : IExceptionHandler
+    IProblemDetailsService problemDetailsService, 
+    ILogger<ValidationExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
@@ -34,6 +35,14 @@ internal sealed class ValidationExceptionHandler(
                 g => g.Select(e => e.ErrorMessage).ToArray()
             );
         context.ProblemDetails.Extensions.Add("errors", errors);
+
+        string methodType = httpContext.Request.Method;
+        string path = httpContext.Request.Path.HasValue ? httpContext.Request.Path.Value : "no path";
+
+        logger.LogError("Validation error occured for method {@Method}, path {@Path}, error(s): {@Err}",
+            methodType, 
+            path,
+            errors);
 
         return await problemDetailsService.TryWriteAsync(context);
     }

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using OfficesApi.Application.Abstractions.Data;
 using OfficesApi.Application.Offices.GetAll;
 using OfficesApi.Domain;
-using OfficesApi.Shared;
 
 namespace OfficesApi.Application.Offices.Create;
 
@@ -21,16 +20,9 @@ public class CreateOfficeCommandHandler
 
         var office = mapper.Map<Office>(request.OfficeCreateDto);
         
-        try
-        {
-            await officeRepository.AddOfficeAsync(office);
-            logger.LogInformation("Created new office object: {@Office}", office);         
-        }
-        catch(Exception ex)
-        {
-            logger.LogError("Exception occured when trying to create new office object: {@}", office);
-            throw new MongoDbException(ex.Message);
-        }
+        await officeRepository.AddOfficeAsync(office);
+        
+        logger.LogInformation("Created new office object: {@Office}", office);         
         
         var officeResponse = mapper.Map<OfficeResponse>(office);
 

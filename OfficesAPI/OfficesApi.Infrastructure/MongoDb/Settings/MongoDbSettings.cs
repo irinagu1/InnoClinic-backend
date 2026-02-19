@@ -1,4 +1,4 @@
-namespace OfficesApi.Presentation.Infrastructure.Poco;
+namespace OfficesApi.Infrastructure.MongoDb;
 
 public class MongoDbSettings
 {

@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using OfficesApi.Shared;
-
+using MongoDB.Driver;
 namespace OfficesApi.Presentation;
 
 internal sealed class MongoDbExceptionHandler(
+    ILogger<MongoDbExceptionHandler> logger,
     IProblemDetailsService problemDetailsService) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
@@ -12,7 +12,7 @@ internal sealed class MongoDbExceptionHandler(
         Exception exception,
         CancellationToken cancellationToken)
     {
-        if (exception is not MongoDbException validationException)
+        if (exception is not MongoException mongoException)
             return false;
         
         httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
@@ -25,10 +25,19 @@ internal sealed class MongoDbExceptionHandler(
             {
                 Type = "NongoDbException",
                 Title = "MongoDb error",
-                Detail = "MongoDb error has occurred"
+                Detail = $"Message: {exception.Message}"
             }
         };
         
+        string methodType = httpContext.Request.Method;
+        string path = httpContext.Request.Path.HasValue ? httpContext.Request.Path.Value : "no path";
+
+        logger.LogError("MongoDb error occured for method {@Method}, path {@Path}, error(s): {@Err}",
+            methodType, 
+            path,
+            exception.Message);
+
+
         return await problemDetailsService.TryWriteAsync(context);
     }
 }

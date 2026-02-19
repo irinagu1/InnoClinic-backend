@@ -1,6 +1,5 @@
 using System.Collections.Frozen;
 using System.Reflection;
-using System.Text.Json;
 using FluentValidation;
 using OfficesApi.Domain;
 
@@ -32,15 +31,12 @@ public sealed class  PartiallyUpdateOfficeCommandValidator
             .Must(item => AcceptableKeyNames.Contains(item.Key))
             .WithMessage("An update to a non-existent field for the office was introduced")
             .Must(item =>
-            {
-                bool parsing = false;
-                
+            {                
                 if(item.Key == "IsActive")
                 {
-                    JsonElement jsonElement = (JsonElement)item.Value;
-
-                    bool.TryParse(jsonElement.GetString(), out parsing);
-                    return parsing;
+                    if(item.Value.ToString() == "True" || item.Value.ToString() == "False")
+                        return true;
+                    return false;
                 }
                 return true;
             } )

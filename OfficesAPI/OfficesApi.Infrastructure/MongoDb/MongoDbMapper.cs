@@ -10,8 +10,6 @@ public static class MongoDbMapper
 {
     public static void RegisterMappings()
     {
-      //  BsonSerializer.RegisterSerializer(new StringSerializer(BsonType.ObjectId));
-
         BsonClassMap.RegisterClassMap<Office>(cm =>
         {
             cm.AutoMap(); 
