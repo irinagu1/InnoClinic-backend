@@ -8,6 +8,7 @@ public static class ExtensionMethods
     {
         services.AddProblemDetails();
         services.AddExceptionHandler<ValidationExceptionHandler>();
+        services.AddExceptionHandler<NotFoundExceptionHandler>();
         services.AddExceptionHandler<MongoDbExceptionHandler>();
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
