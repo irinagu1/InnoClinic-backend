@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OfficesApi.Application.Offices.Create;
 using OfficesApi.Application.Offices.Delete;
@@ -11,6 +12,7 @@ namespace OfficesApi.Presentation.Controllers;
 [Route("api/offices")]
 [ApiController]
 [ServiceFilter<TrackExecutionTimeAttribute>]
+[Authorize("OfficesAuthPolicy")] 
 public class OfficesController : ControllerBase
 {
     private readonly ISender _sender;

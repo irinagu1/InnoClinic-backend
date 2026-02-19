@@ -1,5 +1,6 @@
 using System.Reflection;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi;
 using OfficesApi.Application.Abstractions.Behaviour;
 using OfficesApi.Infrastructure.MongoDb;
@@ -9,6 +10,22 @@ using Serilog;
 var AdminClientAppCors = "AdminClientAppCors";
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    {
+        opt.Authority = "https://localhost:5001";
+        opt.Audience = "https://localhost:5001/resources";
+    });
+
+builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("OfficesAuthPolicy", policy =>
+        {
+          policy.RequireAuthenticatedUser()
+            .RequireRole("admin");
+        });
+    });
 
 builder.Services.AddCors(opt =>
 {
@@ -47,6 +64,20 @@ builder.Services.AddSwaggerGen(opt =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
     opt.IncludeXmlComments(xmlPath);
 
+    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
+
+   opt.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+{
+    [new OpenApiSecuritySchemeReference("Bearer", document)] = new List<string>()
+});
 });
 
 builder.Services.AddValidatorsFromAssembly(typeof(OfficesApi.Application.AssemblyMarker).Assembly);
@@ -56,6 +87,7 @@ builder.Services.AddScoped<IHelperService, HelperService>();
 var app = builder.Build();
 
 app.UseMiddleware<CorrelationIdMiddleware>();
+
 app.UseSerilogRequestLogging();
 
 app.UseExceptionHandler();

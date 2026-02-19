@@ -11,6 +11,16 @@ public static class SD
     public const string Doctor = "doctor";
     public const string Receptionist = "receptionist";
 
+
+    public static IEnumerable<ApiResource> ApiResources =>
+        new List<ApiResource>
+        {
+            new ApiResource("https://localhost:5001/resources") // Offices API
+            {
+                Scopes = { "officesAPI" } 
+            }
+        };
+
     public static IEnumerable<IdentityResource> IdentityResources =>
         new List<IdentityResource>
         {
@@ -27,6 +37,7 @@ public static class SD
             new List<ApiScope>
         {
             new ApiScope("api1", "My API"),
+            new ApiScope("officesAPI", "Offices API"),
         };
 
     public static IEnumerable<Client> Clients()
@@ -59,7 +70,8 @@ public static class SD
                     IdentityServerConstants.StandardScopes.Email,
                     IdentityServerConstants.StandardScopes.Profile,
                     "customRole",
-                    "api1"
+                    "api1",
+                    "officesAPI"
                 }
             },
         };
