@@ -25,6 +25,8 @@ builder.Services.AddCors(opt =>
 
 builder.Host.ConfigureLogging();
 
+builder.Services.AddScoped<TrackExecutionTimeAttribute>();
+
 builder.Services.ConfigureExceptionHandlers();
 
 builder.Services.AddControllers();

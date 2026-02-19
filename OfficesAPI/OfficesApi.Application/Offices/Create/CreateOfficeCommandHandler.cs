@@ -28,7 +28,7 @@ public class CreateOfficeCommandHandler
         }
         catch(Exception ex)
         {
-            logger.LogError("Exception occured when trying to create new office object: {@}", office);
+            logger.LogError("Exception occured when trying to create new office object: {@Office}", office);
             throw new MongoDbException(ex.Message);
         }
         

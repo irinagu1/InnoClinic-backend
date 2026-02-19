@@ -10,21 +10,20 @@ namespace OfficesApi.Presentation.Controllers;
 
 [Route("api/offices")]
 [ApiController]
+[ServiceFilter<TrackExecutionTimeAttribute>]
 public class OfficesController : ControllerBase
 {
     private readonly ISender _sender;
-    private readonly ILogger<OfficesController> _logger;
 
-    public OfficesController(ILogger<OfficesController> logger, ISender sender)
+    public OfficesController(ISender sender)
     {
         _sender = sender;
-        _logger = logger;
     }
 
     /// <summary>
     /// Gets list of all offices
     /// </summary>
-    /// <returns>List of offices</returns>ы
+    /// <returns>List of offices</returns>
     [HttpGet]
     public async Task<ActionResult> GetAllOffices()
     {
@@ -43,7 +42,7 @@ public class OfficesController : ControllerBase
         var office = await _sender.Send(new GetOfficeByIdQuery(id));
         return Ok(office);
     }
-    
+
     /// <summary>
     /// Creates new office
     /// </summary>
@@ -73,8 +72,8 @@ public class OfficesController : ControllerBase
     /// { "IsActive" : false }</param>
     /// <returns>NoContent</returns>
     [HttpPut("{id}")]
-    public async Task<IActionResult> PartiallyUpdateOffice(string id, 
-        [FromBody] Dictionary<string,object> updates)
+    public async Task<IActionResult> PartiallyUpdateOffice(string id,
+        [FromBody] Dictionary<string, object> updates)
     {
         await _sender.Send(new PartiallyUpdateOfficeCommand(id, updates));
 
