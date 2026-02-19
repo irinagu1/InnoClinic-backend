@@ -1,13 +1,10 @@
 using System.Reflection;
 using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi;
-using OfficesApi.Application;
 using OfficesApi.Application.Abstractions.Behaviour;
+using OfficesApi.Infrastructure.MongoDb;
 using OfficesApi.Presentation;
-using OfficesApi.Presentation.Infrastructure.Poco;
 using Serilog;
-using SharpCompress.Compressors.ADC;
 
 var AdminClientAppCors = "AdminClientAppCors";
 
@@ -54,13 +51,15 @@ builder.Services.AddSwaggerGen(opt =>
 
 builder.Services.AddValidatorsFromAssembly(typeof(OfficesApi.Application.AssemblyMarker).Assembly);
 
+builder.Services.AddScoped<IHelperService, HelperService>();
+
 var app = builder.Build();
 
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseSerilogRequestLogging();
 
-
 app.UseExceptionHandler();
+
 app.UseStatusCodePages();
 
 if (app.Environment.IsDevelopment())
