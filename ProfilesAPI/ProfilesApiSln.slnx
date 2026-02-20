@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Application/">
+    <Project Path="Application/Contracts/Contracts.csproj" />
+    <Project Path="Application/Services/Services.csproj" />
+  </Folder>
+  <Folder Name="/Domain/">
+    <Project Path="Domain/Entities/Entities.csproj" />
+  </Folder>
+  <Folder Name="/Infrastructure/">
+    <Project Path="Infrastructure/Repository/Repository.csproj" />
+  </Folder>
+  <Folder Name="/Presentation/">
+    <Project Path="Presentation/ProfilesApi.Presentation/ProfilesApi.Presentation.csproj" />
+    <Project Path="Presentation/Services.Contracts/Services.Contracts.csproj" />
+  </Folder>
+  <Project Path="ProfilesApi/ProfilesApi.csproj" />
+</Solution>
