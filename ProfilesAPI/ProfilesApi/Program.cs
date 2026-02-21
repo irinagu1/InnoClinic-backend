@@ -1,5 +1,6 @@
 using FluentValidation;
 using ProfilesApi;
+using ProfilesApi.Infrastructure.Middleware;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,7 @@ builder.Services.ConfigureSwagger();
 
 var app = builder.Build();
 
+app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseSerilogRequestLogging();
 app.UseExceptionHandler();
 
