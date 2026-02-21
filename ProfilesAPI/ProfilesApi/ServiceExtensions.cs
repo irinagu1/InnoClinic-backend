@@ -1,7 +1,9 @@
 using Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 using ProfilesApi.Infrastructure.ErrorHandlers;
 using Repository;
+using Serilog;
 using Services;
 using Services.Contracts;
 
@@ -9,7 +11,16 @@ namespace ProfilesApi;
 
 public static class ServiceExtensions
 {
-    public static IServiceCollection ConfigureErrorHandlers(this IServiceCollection services)
+
+    public static void ConfigureSwagger(this IServiceCollection services)
+    {
+            services.AddSwaggerGen(opt =>
+            {
+                opt.SwaggerDoc("v1", new OpenApiInfo{Title="Profiles API", Version="v1"});
+            });
+    }
+
+    public static IServiceCollection ConfigureExceptionHandlers(this IServiceCollection services)
     {
         services.AddProblemDetails();
         services.AddExceptionHandler<ValidationExceptionHandler>();
@@ -17,6 +28,23 @@ public static class ServiceExtensions
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
         return services;
+    }
+
+    public static IHostBuilder ConfigureLogging(this IHostBuilder host)
+    {
+        string customTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] [{CorrelationId}] {Message:lj}{NewLine}{Exception}";
+
+        host.UseSerilog((context, configuration) =>
+            configuration.ReadFrom.Configuration(context.Configuration)
+            .Enrich.FromLogContext()  
+            .WriteTo.Console(outputTemplate: customTemplate)
+            .WriteTo.File(
+                path: "logs/log-profilesApi-.txt", 
+                rollingInterval: RollingInterval.Day,
+                outputTemplate: customTemplate,
+                shared: true) 
+            );
+        return host;
     }
 
     public static void ConfigureRepositoryManager(this IServiceCollection services) =>

@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace ProfilesApi.Infrastructure.ErrorHandlers;
 
 internal sealed class GlobalExceptionHandler
-    (IProblemDetailsService problemDetailsService) : IExceptionHandler
+    (IProblemDetailsService problemDetailsService,
+    ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync
         (HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
@@ -21,6 +22,14 @@ internal sealed class GlobalExceptionHandler
             }
         };
         
+        string methodType = httpContext.Request.Method;
+        string path = httpContext.Request.Path.HasValue ? httpContext.Request.Path.Value : "no path";
+
+        logger.LogError("Global exception occured for method {@Method}, path {@Path}, error: {@Err}",
+            methodType, 
+            path,
+            exception.Message);
+
         return await problemDetailsService.TryWriteAsync(context);
     }
 }

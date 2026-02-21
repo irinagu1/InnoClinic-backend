@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 namespace ProfilesApi.Infrastructure.ErrorHandlers;
 
 internal sealed class MsSqlDbExceptionHandler
-    (IProblemDetailsService problemDetailsService) : IExceptionHandler
+    (IProblemDetailsService problemDetailsService,
+    ILogger<MsSqlDbExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync
         (HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
@@ -37,6 +38,14 @@ internal sealed class MsSqlDbExceptionHandler
                 Instance = httpContext.Request.Path
             }
         };
+
+        string methodType = httpContext.Request.Method;
+        string path = httpContext.Request.Path.HasValue ? httpContext.Request.Path.Value : "no path";
+
+        logger.LogError("MSSQL DB error occured for method {@Method}, path {@Path}, error(s): {@Err}",
+            methodType, 
+            path,
+            exception.Message);
         
         return await problemDetailsService.TryWriteAsync(context);
     }
