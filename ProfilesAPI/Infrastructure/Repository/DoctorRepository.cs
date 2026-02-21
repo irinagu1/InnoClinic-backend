@@ -9,4 +9,8 @@ public class DoctorRepository : RepositoryBase<Doctor>, IDoctorRepository
         : base(repositoryContext)
     {
     }
+
+    public IEnumerable<Doctor> GetAllDoctors(bool trackChanges) =>
+        FindAll(trackChanges)
+            .ToList();
 }

@@ -14,4 +14,5 @@
     <Project Path="Presentation/Services.Contracts/Services.Contracts.csproj" />
   </Folder>
   <Project Path="ProfilesApi/ProfilesApi.csproj" />
+  <Project Path="Shared/Shared.csproj" />
 </Solution>
