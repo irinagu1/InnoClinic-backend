@@ -17,4 +17,7 @@ public sealed class RepositoryManager : IRepositoryManager
     public IDoctorRepository Doctor => _doctorRepository.Value;
 
     public void Save() => _repositoryContext.SaveChanges();
+
+    public async Task SaveAsync() =>
+        await _repositoryContext.SaveChangesAsync();
 }
