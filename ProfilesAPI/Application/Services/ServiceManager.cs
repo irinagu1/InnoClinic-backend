@@ -1,0 +1,23 @@
+using AutoMapper;
+using Contracts;
+using FluentValidation;
+using Services.Contracts;
+using Shared.Dtos;
+
+namespace Services;
+
+public sealed class ServiceManager : IServiceManager
+{
+    private readonly Lazy<IDoctorService> _doctorService;
+
+    public ServiceManager(
+        IRepositoryManager repositoryManager, 
+        IMapper mapper, 
+        IValidator<DoctorForCreationDto> validator)
+    {
+        _doctorService = new Lazy<IDoctorService>(()=> 
+            new DoctorService(repositoryManager, mapper, validator));
+    }
+
+    public IDoctorService DoctorService => _doctorService.Value;
+}
