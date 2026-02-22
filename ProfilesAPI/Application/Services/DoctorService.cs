@@ -4,6 +4,7 @@ using Entities.Models;
 using FluentValidation;
 using Services.Contracts;
 using Shared.Dtos;
+using Shared.ResultPattern;
 
 namespace Services;
 
@@ -39,13 +40,15 @@ internal sealed class DoctorService : IDoctorService
         return dtos;
     }
 
-    public async Task<DoctorDto> GetDoctorByIdAsync(string doctorId, bool trackChanges)
+    public async Task<Result<DoctorDto>> GetDoctorByIdAsync(string doctorId, bool trackChanges)
     {
         var entity = await _repository.Doctor.GetDoctorByIdAsync(doctorId, trackChanges);
 
-         // NULL CHECK
+        if(entity is null)
+            return Result.Failure<DoctorDto>(DoctorErrors.NotFound(doctorId));
 
         var dto = _mapper.Map<DoctorDto>(entity);
-        return dto;
+ 
+        return Result.Success(dto);
     }
 }

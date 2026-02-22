@@ -9,7 +9,7 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<Doctor, DoctorDto>()
-            .ForMember(d => d.FullName, opt => opt.MapFrom(src => 
+            .ForCtorParam("FullName", opt => opt.MapFrom(src => 
                         $"{src.LastName} {src.FirstName}"));
 
         CreateMap<DoctorForCreationDto, Doctor>();
