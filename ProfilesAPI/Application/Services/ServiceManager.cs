@@ -15,10 +15,11 @@ public sealed class ServiceManager : IServiceManager
         IRepositoryManager repositoryManager, 
         IMapper mapper, 
         IValidator<DoctorForCreationDto> validator, 
-        IEventBus eventBus)
+        IEventBus eventBus,
+        SynchronousCommunication synchronousCommunication)
     {
         _doctorService = new Lazy<IDoctorService>(()=> 
-            new DoctorService(repositoryManager, mapper, validator, eventBus));
+            new DoctorService(repositoryManager, mapper, validator, eventBus, synchronousCommunication));
     }
 
     public IDoctorService DoctorService => _doctorService.Value;

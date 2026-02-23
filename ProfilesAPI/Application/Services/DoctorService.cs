@@ -30,26 +30,27 @@ internal sealed class DoctorService : IDoctorService
         _syncCommunication = synchronousCommunication;
     }
 
-    public async Task<DoctorDto> CreateDoctorAsync(DoctorForCreationDto dto)
+    public async Task<Result<DoctorDto>> CreateDoctorAsync(DoctorForCreationDto dto)
     {
         await _validator.ValidateAndThrowAsync(dto);
 
-// 1 отправка синхронного запроса есть ли такой емаил в системе
-
         bool isEmailExiist = await _syncCommunication.CheckIfEmailIsExistAsync(dto.Email);
-        Console.WriteLine(isEmailExiist);
+        if(isEmailExiist)
+            return Result.Failure<DoctorDto>(AuthErrors.EmailAlreadyExist(dto.Email));
+
         var entity = _mapper.Map<Doctor>(dto);
         _repository.Doctor.CreateDoctor(entity);
         await _repository.SaveAsync();
         var dtoToReturn = _mapper.Map<DoctorDto>(entity);
-        return dtoToReturn;
+        
+        return Result.Success(dtoToReturn);
     }
 
     public async Task<IEnumerable<DoctorDto>> GetAllDoctorsAsync(bool trackChanges)
     {
-        DoctorCreatedEvent e = new DoctorCreatedEvent("11", "emaol");
-        await _eventBus.PublishAsync(e, "users");
-        
+     //   DoctorCreatedEvent e = new DoctorCreatedEvent("11", "emaol");
+     //   await _eventBus.PublishAsync(e, "users");
+
         var entities = await _repository.Doctor.GetAllDoctorsAsync(trackChanges);
         var dtos = _mapper.Map<IEnumerable<DoctorDto>>(entities);
         return dtos;

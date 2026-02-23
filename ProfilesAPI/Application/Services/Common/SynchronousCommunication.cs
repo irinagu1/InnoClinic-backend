@@ -11,7 +11,7 @@ public class SynchronousCommunication
 
     public async Task<bool> CheckIfEmailIsExistAsync(string email)
     {
-        string url = $"https://localhost:4321?email={email}";
+        string url = $"https://localhost:5001/api/auth?email={email}";
         
         HttpResponseMessage response = await client.GetAsync(url);
         
