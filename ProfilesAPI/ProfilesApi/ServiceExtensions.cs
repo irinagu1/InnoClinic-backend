@@ -1,4 +1,5 @@
 using Contracts;
+using Intercommunication.RabbitMQ;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using ProfilesApi.Infrastructure.ErrorHandlers;
@@ -6,18 +7,28 @@ using Repository;
 using Serilog;
 using Services;
 using Services.Contracts;
+using Services.Interfaces;
 
 namespace ProfilesApi;
 
 public static class ServiceExtensions
 {
 
-    public static void ConfigureSwagger(this IServiceCollection services)
+    public static IServiceCollection ConfigureRabbitMQ
+        (this IServiceCollection services, IConfiguration configuration)
     {
-            services.AddSwaggerGen(opt =>
+        services.Configure<RabbitMQSettings>(configuration.GetSection("RabbitMQSettings"));
+        services.AddSingleton<IEventBus, RabbitMqBus>();
+        return services;
+    }
+
+    public static IServiceCollection ConfigureSwagger(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(opt =>
             {
                 opt.SwaggerDoc("v1", new OpenApiInfo{Title="Profiles API", Version="v1"});
             });
+        return services;
     }
 
     public static IServiceCollection ConfigureExceptionHandlers(this IServiceCollection services)
