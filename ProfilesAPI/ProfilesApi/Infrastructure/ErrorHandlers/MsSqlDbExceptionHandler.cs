@@ -12,14 +12,14 @@ internal sealed class MsSqlDbExceptionHandler
     public async ValueTask<bool> TryHandleAsync
         (HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        if (exception is not DbUpdateException efException)
+        if (exception.Source != "Microsoft.EntityFrameworkCore")
             return false;
 
         string title = "MS SQL Database error";
         string type = "EfCoreDbException";
-        string detail = efException.Message;
+        string detail = exception.Message;
 
-        if (efException.InnerException is SqlException sqlEx)
+        if (exception.InnerException is SqlException sqlEx)
         {
             type = "SqlServerException";
             title = $"SQL Error (Code {sqlEx.Number})";

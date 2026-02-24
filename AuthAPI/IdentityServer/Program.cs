@@ -1,4 +1,10 @@
 using IdentityServer.Db;
+using IdentityServer.RabbitMQ;
+using IdentityServer.RabbitMQ.EventHandlers;
+using IdentityServer.RabbitMQ.Events;
+using IdentityServer.Services;
+using Intercommunication.RabbitMQ;
+using RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +17,8 @@ builder.Services.ConfigureIdentityServer();
 builder.Services.ConfigureSwagger();
 
 builder.Services.RegisterServices();
+
+builder.Services.ConfigureRabbitMQ();
 
 var app = builder.Build();
 

@@ -1,11 +1,12 @@
-using Application.Events;
 using AutoMapper;
 using Contracts;
 using Entities.Models;
 using FluentValidation;
+using Services.AsyncCommunication;
 using Services.Contracts;
-using Services.Interfaces;
+using Shared;
 using Shared.Dtos;
+using Shared.Messaging.Events;
 using Shared.ResultPattern;
 
 namespace Services;
@@ -15,18 +16,18 @@ internal sealed class DoctorService : IDoctorService
     private readonly IRepositoryManager _repository;
     private readonly IMapper _mapper;
     private readonly IValidator<DoctorForCreationDto> _validator;
-    private readonly IEventBus _eventBus;
-
+//    private readonly IEventBus _eventBus;
+    private readonly IQueueProducer<UserToCreateEvent> _queueProducerUserToCreate;
     private readonly SynchronousCommunication _syncCommunication;
 
     public DoctorService(IRepositoryManager repositoryManager,
         IMapper mapper, IValidator<DoctorForCreationDto> validator, 
-        IEventBus eventBus, SynchronousCommunication synchronousCommunication)
+        IQueueProducer<UserToCreateEvent> queueProducerUserToCreate, SynchronousCommunication synchronousCommunication)
     {
         _repository = repositoryManager;
         _mapper = mapper;
         _validator = validator;
-        _eventBus = eventBus;
+        _queueProducerUserToCreate = queueProducerUserToCreate;
         _syncCommunication = synchronousCommunication;
     }
 
@@ -34,23 +35,34 @@ internal sealed class DoctorService : IDoctorService
     {
         await _validator.ValidateAndThrowAsync(dto);
 
-        bool isEmailExiist = await _syncCommunication.CheckIfEmailIsExistAsync(dto.Email);
+        // 1 - check if email exists
+    /*    bool isEmailExiist = await _syncCommunication.CheckIfEmailIsExistAsync(dto.Email);
         if(isEmailExiist)
             return Result.Failure<DoctorDto>(AuthErrors.EmailAlreadyExist(dto.Email));
-
+*/
         var entity = _mapper.Map<Doctor>(dto);
-        _repository.Doctor.CreateDoctor(entity);
-        await _repository.SaveAsync();
-        var dtoToReturn = _mapper.Map<DoctorDto>(entity);
+
+        //2 set id and status - created and add to db
+        entity.DoctorId = Guid.NewGuid().ToString();
+        entity.EntityStatus = EntityStatuses.Created;
+
+    /*    _repository.Doctor.CreateDoctor(entity);
         
+        await _repository.SaveAsync();
+        
+        //3 - change entity status and arise event
+        entity.EntityStatus = EntityStatuses.Processing;
+        await _repository.SaveAsync();
+*/
+        var doctorCreatedEvent = new UserToCreateEvent(UserRoles.Doctor, dto.Email,  entity.DoctorId);
+        await _queueProducerUserToCreate.PublishMessageAsync(doctorCreatedEvent);
+
+        var dtoToReturn = _mapper.Map<DoctorDto>(entity);
         return Result.Success(dtoToReturn);
     }
 
     public async Task<IEnumerable<DoctorDto>> GetAllDoctorsAsync(bool trackChanges)
     {
-     //   DoctorCreatedEvent e = new DoctorCreatedEvent("11", "emaol");
-     //   await _eventBus.PublishAsync(e, "users");
-
         var entities = await _repository.Doctor.GetAllDoctorsAsync(trackChanges);
         var dtos = _mapper.Map<IEnumerable<DoctorDto>>(entities);
         return dtos;

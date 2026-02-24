@@ -1,4 +1,7 @@
+using System.Security.Claims;
+using Duende.IdentityModel;
 using IdentityServer.Models;
+using IdentityServer.RabbitMQ.Events;
 using Microsoft.AspNetCore.Identity;
 
 namespace IdentityServer.Services;
@@ -19,5 +22,32 @@ public class AuthService : IAuthService
             return false;
         else
             return true;
+    }
+
+    public async Task<string> CreateNewAccountAndReturnIdAsync(UserToCreateEvent @event)
+    {
+        var pass = "Admin123!";
+
+        var doctor = new ApplicationUser()
+        {
+            UserName = @event.email,
+            Email = @event.email,
+            EmailConfirmed = true,
+            PhoneNumber="1"
+        };
+        var result = await _userManager.CreateAsync(doctor, pass);
+        if(result.Succeeded)
+        {
+            await _userManager.AddToRoleAsync(doctor, @event.userType);
+            await _userManager.AddClaimsAsync(doctor,
+            [
+                new Claim(JwtClaimTypes.Name, @event.email),
+                new Claim(JwtClaimTypes.Email, @event.email),
+                new Claim(JwtClaimTypes.Role, @event.userType)
+            ]);            
+            return doctor.Id;
+        }
+        
+        throw new Exception();
     }
 }

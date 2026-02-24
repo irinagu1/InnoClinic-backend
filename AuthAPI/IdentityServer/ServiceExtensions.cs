@@ -1,13 +1,39 @@
 using IdentityServer.Db;
 using IdentityServer.Models;
+using IdentityServer.RabbitMQ.EventHandlers;
+using IdentityServer.RabbitMQ.Events;
 using IdentityServer.Services;
 using IdentityServer.StaticData;
+using Intercommunication.RabbitMQ;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
+using RabbitMQ;
 
 public static class ServiceExtensions
 {
+  public static IServiceCollection AddQueueMessageConsumer<TMessageConsumer, TQueueMessage>
+    (this IServiceCollection services) where TMessageConsumer : IQueueConsumer<TQueueMessage> where TQueueMessage : IntegrationEvent
+  {
+      services.AddScoped(typeof(TMessageConsumer));
+      services.AddScoped<IQueueConsumerHandler<TMessageConsumer, TQueueMessage>, QueueConsumerHandler<TMessageConsumer, TQueueMessage>>();
+      services.AddHostedService<QueueConsumerRegistratorService<TMessageConsumer, TQueueMessage>>();
+
+      return services;
+  }
+
+      public static IServiceCollection ConfigureRabbitMQ
+        (this IServiceCollection services)
+    {
+        services.AddSingleton<IConnectionProvider, ConnectionProvider>();  
+        services.AddScoped<IChannelProvider, ChannelProvider>();           
+        services.AddScoped(typeof(IQueueChannelProvider<>), typeof(QueueChannelProvider<>));   
+
+        services.AddQueueMessageConsumer<UserToCreateEventHandler, UserToCreateEvent>();
+
+        return services;
+    }
+
     public static IServiceCollection RegisterServices(this IServiceCollection services)
     {
         services.AddScoped<IAuthService, AuthService>();

@@ -10,5 +10,6 @@ public record DoctorDto(
     string SpecializationName,
     string OfficeAddress,
     int CareerStartYear,
-    string Status
+    string Status,
+    string EntityStatus
     );

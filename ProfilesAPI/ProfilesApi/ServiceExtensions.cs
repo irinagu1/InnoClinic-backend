@@ -6,19 +6,21 @@ using ProfilesApi.Infrastructure.ErrorHandlers;
 using Repository;
 using Serilog;
 using Services;
+using Services.AsyncCommunication;
 using Services.Contracts;
-using Services.Interfaces;
 
 namespace ProfilesApi;
 
 public static class ServiceExtensions
 {
-
     public static IServiceCollection ConfigureRabbitMQ
-        (this IServiceCollection services, IConfiguration configuration)
+        (this IServiceCollection services)
     {
-        services.Configure<RabbitMQSettings>(configuration.GetSection("RabbitMQSettings"));
-        services.AddSingleton<IEventBus, RabbitMqBus>();
+        services.AddSingleton<IConnectionProvider, ConnectionProvider>();  
+        services.AddScoped<IChannelProvider, ChannelProvider>();          
+        services.AddScoped(typeof(IQueueChannelProvider<>), typeof(QueueChannelProvider<>));  
+        services.AddScoped(typeof(IQueueProducer<>), typeof(QueueProducer<>));                
+
         return services;
     }
 
@@ -63,6 +65,7 @@ public static class ServiceExtensions
     
     public static void ConfigureServiceManager(this IServiceCollection services) =>
         services.AddScoped<IServiceManager, ServiceManager>();
+    
 
     public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) =>
         services.AddDbContext<RepositoryContext>(opt => 
