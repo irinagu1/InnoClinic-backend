@@ -36,4 +36,12 @@ public class DoctorsController : ControllerBase
         var doctor = await _serviceManager.DoctorService.CreateDoctorAsync(dto);
         return Ok(doctor);
     }
+
+    [HttpDelete("id")]
+    public async Task<IActionResult> CreateDoctor(string doctorId)
+    {
+        var result = await _serviceManager.DoctorService.DeleteDoctorByIdAsync(doctorId, true);
+
+        return Ok(result);
+    }
 }

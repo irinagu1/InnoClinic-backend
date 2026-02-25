@@ -14,6 +14,9 @@ public class DoctorRepository : RepositoryBase<Doctor>, IDoctorRepository
     public void CreateDoctor(Doctor doctor) =>
         Create(doctor);
 
+    public void DeleteDoctor(Doctor doctor) =>
+        Delete(doctor);
+
     public async Task<IEnumerable<Doctor>> GetAllDoctorsAsync(bool trackChanges) =>
         await FindAll(trackChanges)
             .ToListAsync();

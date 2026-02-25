@@ -79,4 +79,18 @@ internal sealed class DoctorService : IDoctorService
  
         return Result.Success(dto);
     }
+
+    public async Task<Result> DeleteDoctorByIdAsync(string doctorId, bool trackChanges)
+    {
+        var entity = await _repository.Doctor.GetDoctorByIdAsync(doctorId, trackChanges);
+
+        if(entity is null)
+            return Result.Failure<DoctorDto>(DoctorErrors.NotFound(doctorId));
+        
+        _repository.Doctor.DeleteDoctor(entity);
+
+        await _repository.SaveAsync();
+        
+        return Result.Success();
+    }
 }
