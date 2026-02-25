@@ -18,13 +18,12 @@ public static class ServiceExtensions
     public static IServiceCollection ConfigureRabbitMQ
         (this IServiceCollection services)
     {
+        //docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:4-management
         services.AddSingleton<IConnectionProvider, ConnectionProvider>();  
         services.AddScoped<IChannelProvider, ChannelProvider>();          
         services.AddScoped(typeof(IQueueChannelProvider<>), typeof(QueueChannelProvider<>));  
         services.AddScoped(typeof(IQueueProducer<>), typeof(QueueProducer<>));                
-
         services.AddQueueMessageConsumer<UserCreatedEventHandler, UserCreatedEvent>();
-
         return services;
     }
 

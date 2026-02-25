@@ -1,6 +1,8 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
 using Shared.Dtos;
+using Shared.RequestFeatures;
 
 namespace ProfilesApi.Presentation.Controllers;
 
@@ -16,10 +18,14 @@ public class DoctorsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllDoctors()
+    public async Task<IActionResult> GetAllDoctors([FromQuery] DoctorParameters parameters)
     {
-        var doctors = await _serviceManager.DoctorService.GetAllDoctorsAsync(false);
-        return Ok(doctors);
+        var pagedResult = await 
+            _serviceManager.DoctorService.GetAllDoctorsAsync(parameters, false);
+        
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
+        
+        return Ok(pagedResult.doctors);
     }
 
 

@@ -7,6 +7,7 @@ using Services.Contracts;
 using Shared;
 using Shared.Dtos;
 using Shared.Messaging.Events;
+using Shared.RequestFeatures;
 using Shared.ResultPattern;
 
 namespace Services;
@@ -16,13 +17,13 @@ internal sealed class DoctorService : IDoctorService
     private readonly IRepositoryManager _repository;
     private readonly IMapper _mapper;
     private readonly IValidator<DoctorForCreationDto> _validator;
-//    private readonly IEventBus _eventBus;
     private readonly IQueueProducer<UserToCreateEvent> _queueProducerUserToCreate;
     private readonly SynchronousCommunication _syncCommunication;
 
     public DoctorService(IRepositoryManager repositoryManager,
         IMapper mapper, IValidator<DoctorForCreationDto> validator, 
-        IQueueProducer<UserToCreateEvent> queueProducerUserToCreate, SynchronousCommunication synchronousCommunication)
+        IQueueProducer<UserToCreateEvent> queueProducerUserToCreate, 
+        SynchronousCommunication synchronousCommunication)
     {
         _repository = repositoryManager;
         _mapper = mapper;
@@ -61,11 +62,12 @@ internal sealed class DoctorService : IDoctorService
         return Result.Success(dtoToReturn);
     }
 
-    public async Task<IEnumerable<DoctorDto>> GetAllDoctorsAsync(bool trackChanges)
+    public async Task<(IEnumerable<DoctorDto> doctors, MetaData metaData)> GetAllDoctorsAsync
+        (DoctorParameters parameters, bool trackChanges)
     {
-        var entities = await _repository.Doctor.GetAllDoctorsAsync(trackChanges);
-        var dtos = _mapper.Map<IEnumerable<DoctorDto>>(entities);
-        return dtos;
+        var entitiesWithMetaData = await _repository.Doctor.GetAllDoctorsAsync(parameters, trackChanges);
+        var dtos = _mapper.Map<IEnumerable<DoctorDto>>(entitiesWithMetaData);
+        return (dtos, entitiesWithMetaData.MetaData);
     }
 
     public async Task<Result<DoctorDto>> GetDoctorByIdAsync(string doctorId, bool trackChanges)
