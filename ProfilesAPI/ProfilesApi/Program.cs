@@ -21,6 +21,10 @@ builder.Services.AddValidatorsFromAssembly(typeof(Services.AssemblyMarker).Assem
 
 builder.Services.ConfigureSwagger();
 
+builder.Services.ConfigureRabbitMQ();
+
+builder.Services.AddTransient<SynchronousCommunication>();
+ 
 var app = builder.Build();
 
 app.UseMiddleware<CorrelationIdMiddleware>();

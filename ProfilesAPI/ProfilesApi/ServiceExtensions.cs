@@ -1,23 +1,50 @@
 using Contracts;
+using Intercommunication.RabbitMQ;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using ProfilesApi.Infrastructure.ErrorHandlers;
 using Repository;
 using Serilog;
 using Services;
+using Services.AsyncCommunication;
+using Services.AsyncCommunication.Handlers;
 using Services.Contracts;
+using Shared.Messaging.Events;
 
 namespace ProfilesApi;
 
 public static class ServiceExtensions
 {
-
-    public static void ConfigureSwagger(this IServiceCollection services)
+    public static IServiceCollection ConfigureRabbitMQ
+        (this IServiceCollection services)
     {
-            services.AddSwaggerGen(opt =>
+        //docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:4-management
+        services.AddSingleton<IConnectionProvider, ConnectionProvider>();  
+        services.AddScoped<IChannelProvider, ChannelProvider>();          
+        services.AddScoped(typeof(IQueueChannelProvider<>), typeof(QueueChannelProvider<>));  
+        services.AddScoped(typeof(IQueueProducer<>), typeof(QueueProducer<>));                
+        services.AddQueueMessageConsumer<UserCreatedEventHandler, UserCreatedEvent>();
+        return services;
+    }
+
+    private static IServiceCollection AddQueueMessageConsumer<TMessageConsumer, TQueueMessage>
+        (this IServiceCollection services) where TMessageConsumer : IQueueConsumer<TQueueMessage> where TQueueMessage : IntegrationEvent
+    {
+      services.AddScoped(typeof(TMessageConsumer));
+      services.AddScoped<IQueueConsumerHandler<TMessageConsumer, TQueueMessage>, QueueConsumerHandler<TMessageConsumer, TQueueMessage>>();
+      services.AddHostedService<QueueConsumerRegistratorService<TMessageConsumer, TQueueMessage>>();
+      services.AddScoped(typeof(IQueueProducer<>), typeof(QueueProducer<>));                
+
+      return services;
+    }
+
+    public static IServiceCollection ConfigureSwagger(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(opt =>
             {
                 opt.SwaggerDoc("v1", new OpenApiInfo{Title="Profiles API", Version="v1"});
             });
+        return services;
     }
 
     public static IServiceCollection ConfigureExceptionHandlers(this IServiceCollection services)
@@ -52,6 +79,7 @@ public static class ServiceExtensions
     
     public static void ConfigureServiceManager(this IServiceCollection services) =>
         services.AddScoped<IServiceManager, ServiceManager>();
+    
 
     public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) =>
         services.AddDbContext<RepositoryContext>(opt => 

@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Infrastructure\Repository\Repository.csproj" />
+    <ProjectReference Include="..\Infrastructure\Intercommunication\Intercommunication.csproj" />
     <ProjectReference Include="..\Application\Services\Services.csproj" />
      <ProjectReference Include="..\Presentation\ProfilesApi.Presentation\ProfilesApi.Presentation.csproj" />
   </ItemGroup>

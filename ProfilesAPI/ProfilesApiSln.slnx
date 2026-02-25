@@ -8,6 +8,7 @@
   </Folder>
   <Folder Name="/Infrastructure/">
     <Project Path="Infrastructure/Repository/Repository.csproj" />
+    <Project Path="Infrastructure/Intercommunication/Intercommunication.csproj" />
   </Folder>
   <Folder Name="/Presentation/">
     <Project Path="Presentation/ProfilesApi.Presentation/ProfilesApi.Presentation.csproj" />

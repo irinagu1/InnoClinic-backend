@@ -1,6 +1,7 @@
 namespace Shared.Dtos;
 
 public record DoctorForCreationDto(
+    string Email,
     string FirstName,
     string LastName,
     string? MiddleName,
