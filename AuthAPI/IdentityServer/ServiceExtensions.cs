@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using RabbitMQ;
+using RabbitMQ.Interfaces;
 
 public static class ServiceExtensions
 {
@@ -18,6 +19,7 @@ public static class ServiceExtensions
       services.AddScoped(typeof(TMessageConsumer));
       services.AddScoped<IQueueConsumerHandler<TMessageConsumer, TQueueMessage>, QueueConsumerHandler<TMessageConsumer, TQueueMessage>>();
       services.AddHostedService<QueueConsumerRegistratorService<TMessageConsumer, TQueueMessage>>();
+      services.AddScoped(typeof(IQueueProducer<>), typeof(QueueProducer<>));                
 
       return services;
   }

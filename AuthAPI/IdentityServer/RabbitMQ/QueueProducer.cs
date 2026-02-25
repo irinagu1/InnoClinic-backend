@@ -1,10 +1,10 @@
 using System.Text;
 using System.Text.Json;
+using IdentityServer.RabbitMQ.Events;
 using RabbitMQ.Client;
-using Services.AsyncCommunication;
-using Shared.Messaging.Events;
+using RabbitMQ.Interfaces;
 
-namespace Intercommunication.RabbitMQ;
+namespace RabbitMQ;
 
 public class QueueProducer<TQueueMessage> 
     : IQueueProducer<TQueueMessage> 
@@ -16,7 +16,7 @@ public class QueueProducer<TQueueMessage>
     public QueueProducer(IQueueChannelProvider<TQueueMessage> channelProvider)
     {
         _channel = channelProvider.GetChannelAsync().GetAwaiter().GetResult();
-        _queueName =  typeof(TQueueMessage).Name;
+        _queueName = typeof(TQueueMessage).Name;
     }
 
     public async Task PublishMessageAsync(TQueueMessage @event)

@@ -7,7 +7,9 @@ using Repository;
 using Serilog;
 using Services;
 using Services.AsyncCommunication;
+using Services.AsyncCommunication.Handlers;
 using Services.Contracts;
+using Shared.Messaging.Events;
 
 namespace ProfilesApi;
 
@@ -21,7 +23,20 @@ public static class ServiceExtensions
         services.AddScoped(typeof(IQueueChannelProvider<>), typeof(QueueChannelProvider<>));  
         services.AddScoped(typeof(IQueueProducer<>), typeof(QueueProducer<>));                
 
+        services.AddQueueMessageConsumer<UserCreatedEventHandler, UserCreatedEvent>();
+
         return services;
+    }
+
+    private static IServiceCollection AddQueueMessageConsumer<TMessageConsumer, TQueueMessage>
+        (this IServiceCollection services) where TMessageConsumer : IQueueConsumer<TQueueMessage> where TQueueMessage : IntegrationEvent
+    {
+      services.AddScoped(typeof(TMessageConsumer));
+      services.AddScoped<IQueueConsumerHandler<TMessageConsumer, TQueueMessage>, QueueConsumerHandler<TMessageConsumer, TQueueMessage>>();
+      services.AddHostedService<QueueConsumerRegistratorService<TMessageConsumer, TQueueMessage>>();
+      services.AddScoped(typeof(IQueueProducer<>), typeof(QueueProducer<>));                
+
+      return services;
     }
 
     public static IServiceCollection ConfigureSwagger(this IServiceCollection services)

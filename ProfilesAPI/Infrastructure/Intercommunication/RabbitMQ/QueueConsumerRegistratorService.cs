@@ -1,8 +1,11 @@
-using IdentityServer.RabbitMQ.Events;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Services.AsyncCommunication;
+using Shared.Messaging.Events;
 
-namespace RabbitMQ;
+namespace Intercommunication.RabbitMQ;
 
-internal class QueueConsumerRegistratorService<TMessageConsumer, TQueueMessage> 
+public class QueueConsumerRegistratorService<TMessageConsumer, TQueueMessage> 
     : IHostedService where TMessageConsumer : IQueueConsumer<TQueueMessage> where TQueueMessage : IntegrationEvent
 {
     private IQueueConsumerHandler<TMessageConsumer, TQueueMessage> _consumerHandler;

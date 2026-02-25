@@ -1,12 +1,14 @@
 using System.Text;
 using System.Text.Json;
-using IdentityServer.RabbitMQ.Events;
+using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Services.AsyncCommunication;
+using Shared.Messaging.Events;
 
-namespace RabbitMQ;
+namespace Intercommunication.RabbitMQ;
 
-internal class QueueConsumerHandler<TMessageConsumer, TQueueMessage>    
+public class QueueConsumerHandler<TMessageConsumer, TQueueMessage>    
     : IQueueConsumerHandler<TMessageConsumer, TQueueMessage> 
      where TMessageConsumer : IQueueConsumer<TQueueMessage> 
      where TQueueMessage : IntegrationEvent

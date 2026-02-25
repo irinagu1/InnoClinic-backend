@@ -14,7 +14,7 @@ public class QueueChannelProvider<TQueueMessage>
     public QueueChannelProvider(IChannelProvider channelProvider)
     {
         _channelProvider = channelProvider;
-        _queueName ="AuthAPI"; //typeof(TQueueMessage).Name;
+        _queueName = typeof(TQueueMessage).Name;
     }
 
     public async Task<IChannel> GetChannelAsync()
@@ -26,10 +26,8 @@ public class QueueChannelProvider<TQueueMessage>
 
     private void DeclareQueues()
     {   
-        string queueName = "AuthAPI";
-
         _channel.QueueDeclareAsync(
-                    queue: queueName, 
+                    queue: _queueName, 
                     durable: true, 
                     exclusive: false, 
                     autoDelete: false, 

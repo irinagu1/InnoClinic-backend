@@ -36,24 +36,24 @@ internal sealed class DoctorService : IDoctorService
         await _validator.ValidateAndThrowAsync(dto);
 
         // 1 - check if email exists
-    /*    bool isEmailExiist = await _syncCommunication.CheckIfEmailIsExistAsync(dto.Email);
+        bool isEmailExiist = await _syncCommunication.CheckIfEmailIsExistAsync(dto.Email);
         if(isEmailExiist)
             return Result.Failure<DoctorDto>(AuthErrors.EmailAlreadyExist(dto.Email));
-*/
+
         var entity = _mapper.Map<Doctor>(dto);
 
         //2 set id and status - created and add to db
         entity.DoctorId = Guid.NewGuid().ToString();
         entity.EntityStatus = EntityStatuses.Created;
 
-    /*    _repository.Doctor.CreateDoctor(entity);
+        _repository.Doctor.CreateDoctor(entity);
         
         await _repository.SaveAsync();
         
         //3 - change entity status and arise event
         entity.EntityStatus = EntityStatuses.Processing;
         await _repository.SaveAsync();
-*/
+
         var doctorCreatedEvent = new UserToCreateEvent(UserRoles.Doctor, dto.Email,  entity.DoctorId);
         await _queueProducerUserToCreate.PublishMessageAsync(doctorCreatedEvent);
 

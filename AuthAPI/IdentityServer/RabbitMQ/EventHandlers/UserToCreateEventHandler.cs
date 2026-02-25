@@ -1,19 +1,21 @@
-using Duende.IdentityServer.Validation;
 using IdentityServer.RabbitMQ.Events;
 using IdentityServer.Services;
 using RabbitMQ;
+using RabbitMQ.Interfaces;
 
 namespace IdentityServer.RabbitMQ.EventHandlers;
 
-public class UserToCreateEventHandler : IQueueConsumer<UserToCreateEvent> //IIntegrationEventHandler<UserToCreateEvent>
+public class UserToCreateEventHandler : IQueueConsumer<UserToCreateEvent> 
 {
-
     private IAuthService _authService;
+    private IQueueProducer<UserCreatedEvent> _queueProducerUserCreated;
 
-
-    public UserToCreateEventHandler(IAuthService authService)
+    public UserToCreateEventHandler
+        (IAuthService authService, 
+         IQueueProducer<UserCreatedEvent> queueProducerUserCreated)
     {
         _authService = authService;
+        _queueProducerUserCreated = queueProducerUserCreated;
     }
 
     public async Task ConsumeAsync(UserToCreateEvent message)
@@ -27,11 +29,10 @@ public class UserToCreateEventHandler : IQueueConsumer<UserToCreateEvent> //IInt
         var accountId = await _authService.CreateNewAccountAndReturnIdAsync(domainEvent);
 
         Console.WriteLine(@"[RabbitMQ] Created new account event handleled: {domainEvent}");
-        
-        // TODO:  publish event rhat everyrthing is ok
-       /* var userCreatedEvent = new UserCreatedEvent
+
+        var userCreatedEvent = new UserCreatedEvent
             (domainEvent.userType, domainEvent.userId, accountId);
-        await _eventBus.PublishAsync(userCreatedEvent, "AuthAPI");*/
+        await _queueProducerUserCreated.PublishMessageAsync(userCreatedEvent);
     }
 
 }

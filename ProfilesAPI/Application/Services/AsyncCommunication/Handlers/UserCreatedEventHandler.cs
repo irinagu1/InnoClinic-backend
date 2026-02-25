@@ -1,26 +1,25 @@
 using Microsoft.Extensions.DependencyInjection;
 using Services.Contracts;
 using Shared.Messaging.Events;
-using Shared.Messaging.Handlers;
 
 namespace Services.AsyncCommunication.Handlers;
 
-public class UserCreatedEventHandler : IIntegrationEventHandler<UserCreatedEvent>
+public class UserCreatedEventHandler : IQueueConsumer<UserCreatedEvent>
 {
     private readonly IServiceProvider _serviceProvider;
-    private IUserService _userService;
+    private IServiceManager _serviceManager;
 
     public UserCreatedEventHandler(IServiceProvider serviceProvider)
     {
+
         _serviceProvider = serviceProvider;
     }
 
-    public async Task HandleAsync
-        (UserCreatedEvent domainEvent, CancellationToken cancellationToken = default)
+    public async Task ConsumeAsync(UserCreatedEvent domainEvent)
     {
-        await using var scope = _serviceProvider.CreateAsyncScope();
-        _userService = scope.ServiceProvider.GetService<IUserService>();
-
+        _serviceManager = _serviceProvider.GetService<IServiceManager>();
+        var _userService = _serviceManager.UserService;
+        
         await _userService.UpdateUserAccountToReady(domainEvent);
 
         Console.WriteLine(@"[RabbitMQ] User created event from AutAPI handleled: {domainEvent}");
