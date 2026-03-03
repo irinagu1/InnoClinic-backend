@@ -1,6 +1,9 @@
 using Contracts;
 using Intercommunication.RabbitMQ;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using ProfilesApi.Infrastructure.ErrorHandlers;
 using Repository;
@@ -15,6 +18,12 @@ namespace ProfilesApi;
 
 public static class ServiceExtensions
 {
+    public static NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter =>
+            new ServiceCollection().AddLogging().AddMvc().AddNewtonsoftJson()
+                .Services.BuildServiceProvider()
+                .GetRequiredService<IOptions<MvcOptions>>().Value.InputFormatters
+                .OfType<NewtonsoftJsonPatchInputFormatter>().First();
+                
     public static IServiceCollection ConfigureRabbitMQ
         (this IServiceCollection services)
     {
