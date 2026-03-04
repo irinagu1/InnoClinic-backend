@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="OfficesApi.Application/OfficesApi.Application.csproj" />
+  <Project Path="OfficesApi.Domain/OfficesApi.Domain.csproj" />
+  <Project Path="OfficesApi.Infrastructure/OfficesApi.Infrastructure.csproj" />
+  <Project Path="OfficesApi.Presentation/OfficesApi.Presentation.csproj" />
+  <Project Path="OfficesApi.Shared/OfficesApi.Shared.csproj" />
+  <Project Path="OfficesApi.Tests/OfficesApi.Tests.csproj" />
+</Solution>
