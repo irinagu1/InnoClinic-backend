@@ -9,7 +9,7 @@ public class SynchronousCommunication
         client = new HttpClient();
     }
 
-    public async Task<bool> CheckIfEmailIsExistAsync(string email)
+    public virtual async Task<bool> CheckIfEmailIsExistAsync(string email)
     {
         string url = $"https://localhost:5001/api/auth?email={email}";
         
